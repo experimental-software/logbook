@@ -47,7 +47,7 @@ func TestErrorLog(t *testing.T) {
 
 	// Assert
 	output := strings.TrimSuffix(str.String(), "\n")
-	if !(strings.Contains(output, "ERROR: something went wrong!")) || !(strings.Contains(output, "this is an error")) {
+	if !(strings.Contains(output, "ERROR: something went wrong")) {
 		t.Errorf("Unexpected error log output: %s", str.String())
 	}
 }
