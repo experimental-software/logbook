@@ -19,8 +19,6 @@ jobs:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Build and Test
         run: |-
-          pwd
-          find .
           go test ./... -coverprofile=./cov.out
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v6

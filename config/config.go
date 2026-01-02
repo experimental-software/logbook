@@ -9,8 +9,10 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+var defaultConfigurationFilePath = filepath.Join(userHomeDir(), ".config", "logbook", "config.yaml")
+
 func LogDirectory() string {
-	logDirectory := loadConfiguration().LogDirectory
+	logDirectory := loadConfiguration(defaultConfigurationFilePath).LogDirectory
 	return strings.Replace(logDirectory, "~", userHomeDir(), -1)
 }
 
@@ -22,17 +24,16 @@ var defaultConfiguration = configuration{
 	LogDirectory: filepath.Join(userHomeDir(), "Logs"),
 }
 
-func loadConfiguration() configuration {
-	configurationPath := filepath.Join(userHomeDir(), ".config", "logbook", "config.yaml")
-	configurationBytes, err := os.ReadFile(configurationPath)
+func loadConfiguration(configurationFilePath string) configuration {
+	configurationBytes, err := os.ReadFile(configurationFilePath)
 	if err != nil {
-		logging.Warn("Failed to read configuration file: " + configurationPath)
+		logging.Warn("Failed to read configuration file: " + configurationFilePath)
 		return defaultConfiguration
 	}
 	var result configuration
 	err = yaml.Unmarshal(configurationBytes, &result)
 	if err != nil {
-		logging.Warn("Failed to unmarshal configuration file: " + configurationPath)
+		logging.Warn("Failed to unmarshal configuration file: " + configurationFilePath)
 		return defaultConfiguration
 	}
 	return result
