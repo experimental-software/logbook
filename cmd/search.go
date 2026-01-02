@@ -21,7 +21,7 @@ var searchCmd = &cobra.Command{
 		logEntries := core.Search(config.LogDirectory(), searchTerm)
 
 		t := table.New(os.Stdout)
-		t.SetHeaders("Date Time", "Title", "Path")
+		t.SetHeaders("Date / Time", "Title", "Path")
 		for _, entry := range logEntries {
 			title := entry.Title
 			if len(title) > 45 {
@@ -30,7 +30,6 @@ var searchCmd = &cobra.Command{
 			}
 			t.AddRow(strings.Replace(entry.DateTime, "T", " ", 1), title, entry.Directory)
 		}
-		t.SetAvailableWidth(150)
 		t.Render()
 	},
 }

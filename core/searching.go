@@ -13,31 +13,9 @@ import (
 var logFilePathPattern = regexp.MustCompile(`.*[/\\](\d{4})[/\\](\d{2})[/\\](\d{2})[/\\](\d{2})\.(\d{2})_.*`)
 var logfileParentDirectoryPattern = regexp.MustCompile(`^\d{2}\.\d{2}_.*`)
 
-func isLogEntryFile(path string) bool {
-	pathParts := strings.Split(path, string(os.PathSeparator))
-	lastPathPart := pathParts[len(pathParts)-1]
-	if !strings.HasSuffix(lastPathPart, ".md") {
-		return false
-	}
-	parentDirectory := pathParts[len(pathParts)-2]
-	if !(logfileParentDirectoryPattern.MatchString(parentDirectory)) {
-		return false
-	}
-	parentDirectorySlug := parentDirectory[6:]
-	fileSlug := strings.Replace(lastPathPart, ".md", "", -1)
-	if parentDirectorySlug != fileSlug {
-		return false
-	}
-	pathDatetimeMatch := logFilePathPattern.FindStringSubmatch(path)
-	if len(pathDatetimeMatch) != 6 {
-		return false
-	}
-	return true
-}
-
-func Search(logDirectory, searchTerm string) []LogEntry {
+func Search(baseDirectory, searchTerm string) []LogEntry {
 	var result = make([]LogEntry, 0)
-	err := filepath.Walk(logDirectory,
+	err := filepath.Walk(baseDirectory,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
@@ -77,4 +55,26 @@ func Search(logDirectory, searchTerm string) []LogEntry {
 		logging.Error("Could not traverse log directory.", err)
 	}
 	return result
+}
+
+func isLogEntryFile(path string) bool {
+	pathParts := strings.Split(path, string(os.PathSeparator))
+	lastPathPart := pathParts[len(pathParts)-1]
+	if !strings.HasSuffix(lastPathPart, ".md") {
+		return false
+	}
+	parentDirectory := pathParts[len(pathParts)-2]
+	if !(logfileParentDirectoryPattern.MatchString(parentDirectory)) {
+		return false
+	}
+	parentDirectorySlug := parentDirectory[6:]
+	fileSlug := strings.Replace(lastPathPart, ".md", "", -1)
+	if parentDirectorySlug != fileSlug {
+		return false
+	}
+	pathDatetimeMatch := logFilePathPattern.FindStringSubmatch(path)
+	if len(pathDatetimeMatch) != 6 {
+		return false
+	}
+	return true
 }

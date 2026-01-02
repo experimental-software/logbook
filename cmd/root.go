@@ -17,6 +17,7 @@ var rootCmd = &cobra.Command{
 
 func Execute() {
 	rootCmd.AddCommand(searchCmd)
+	rootCmd.AddCommand(addCmd)
 
 	err := rootCmd.Execute()
 	if err != nil {
