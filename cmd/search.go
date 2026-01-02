@@ -5,7 +5,6 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/table"
-	"github.com/experimental-software/logbook2/config"
 	"github.com/experimental-software/logbook2/core"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +17,7 @@ var searchCmd = &cobra.Command{
 		if len(args) > 0 {
 			searchTerm = args[0]
 		}
-		logEntries := core.Search(config.LogDirectory(), searchTerm)
+		logEntries := core.Search(configuration.LogDirectory, searchTerm)
 
 		t := table.New(os.Stdout)
 		t.SetHeaders("Date / Time", "Title", "Path")
