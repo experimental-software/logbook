@@ -9,17 +9,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var addCmd = &cobra.Command{
-	Use:  "add [flags] title",
+var archiveCmd = &cobra.Command{
+	Use:  "archive [flags] path",
 	Args: cobra.ExactArgs(1),
 
 	Run: func(cmd *cobra.Command, args []string) {
-		title := args[0]
-		result, err := core.AddLogEntry(configuration.LogDirectory, title)
+		path := args[0]
+		err := core.Archive(configuration, path)
 		if err != nil {
-			logging.Error("Failed to create log entry", err)
+			logging.Error("Archive failed", err)
 			os.Exit(1)
 		}
-		fmt.Println(result.Directory)
+		fmt.Println(path)
 	},
 }

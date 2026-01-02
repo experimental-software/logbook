@@ -9,33 +9,38 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
-var defaultConfigurationFilePath = filepath.Join(userHomeDir(), ".config", "logbook", "config.yaml")
+var DefaultConfigurationFilePath = filepath.Join(userHomeDir(), ".config", "logbook", "config.yaml")
 
-func LogDirectory() string {
-	logDirectory := loadConfiguration(defaultConfigurationFilePath).LogDirectory
-	return strings.Replace(logDirectory, "~", userHomeDir(), -1)
+type Configuration struct {
+	LogDirectory     string `json:"logDirectory"`
+	ArchiveDirectory string `json:"archiveDirectory"`
 }
 
-type configuration struct {
-	LogDirectory string `json:"logDirectory"`
-}
-
-var defaultConfiguration = configuration{
+var defaultConfiguration = Configuration{
 	LogDirectory: filepath.Join(userHomeDir(), "Logs"),
 }
 
-func loadConfiguration(configurationFilePath string) configuration {
+func LoadConfiguration(configurationFilePath string) Configuration {
+	var result Configuration
+
 	configurationBytes, err := os.ReadFile(configurationFilePath)
 	if err != nil {
-		logging.Warn("Failed to read configuration file: " + configurationFilePath)
-		return defaultConfiguration
+		logging.Warn("Failed to read Configuration file: " + configurationFilePath)
+		result = defaultConfiguration
 	}
-	var result configuration
+
 	err = yaml.Unmarshal(configurationBytes, &result)
 	if err != nil {
-		logging.Warn("Failed to unmarshal configuration file: " + configurationFilePath)
-		return defaultConfiguration
+		logging.Warn("Failed to unmarshal Configuration file: " + configurationFilePath)
+		result = defaultConfiguration
 	}
+
+	result.LogDirectory = strings.Replace(result.LogDirectory, "~", userHomeDir(), -1)
+	result.LogDirectory = strings.TrimSpace(result.LogDirectory)
+
+	result.ArchiveDirectory = strings.Replace(result.ArchiveDirectory, "~", userHomeDir(), -1)
+	result.ArchiveDirectory = strings.TrimSpace(result.ArchiveDirectory)
+
 	return result
 }
 

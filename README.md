@@ -35,7 +35,15 @@ logDirectory: ~/Logs
 logbook2 search $SEARCH_TERM
 ```
 
-## Development
+## Testing
+
+### Component test
+
+```sh
+go test ./... -coverprofile=./cov.out
+```
+
+### Component integration test
 
 ```sh
 go run main.go
