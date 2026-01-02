@@ -2,7 +2,7 @@
 
 The Logbook project provides a command-line application for Markdown-based chronological note-taking.
 
-## Usage
+## Setup
 
 Provided that a computer has the SDK for the [go](https://go.dev) programming language installed, the _Logbook_ can be
 installed by cloning its git repository and then running the `go install` command.
@@ -18,15 +18,35 @@ Then the program can be executed with the `logbook2` command:
 logbook2
 ```
 
+In the `~/.config/logbook/config.yaml` file it can be configured what directories are used for reading and writing log entries.
+
+The following snippet shows the configuration options with their default values:
+
+```yaml
+# The directory where new log entries are added.
+logDirectory: ~/Logs
+```
+
+## Usage
+
+### Search log entries
+
+```sh
+logbook2 search $SEARCH_TERM
+```
+
 ## Development
 
 ```sh
 go run main.go
+go run main.go search test
 ```
 
 ## Maintenance
 
-TBD
+### Static code analysis
+
+https://sonarcloud.io/summary/overall?id=experimental-software_logbook&branch=main
 
 ## Alternative projects
 

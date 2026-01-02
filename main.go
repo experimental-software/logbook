@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"github.com/experimental-software/logbook2/cmd"
 )
 
 func main() {
-	fmt.Println("A markdown-based engineering logbook")
+	cmd.Execute()
 }
