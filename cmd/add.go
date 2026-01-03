@@ -10,8 +10,9 @@ import (
 )
 
 var addCmd = &cobra.Command{
-	Use:  "add [flags] title",
-	Args: cobra.ExactArgs(1),
+	Use:   "add [flags] title",
+	Args:  cobra.ExactArgs(1),
+	Short: "Add new logbook entries",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		title := args[0]

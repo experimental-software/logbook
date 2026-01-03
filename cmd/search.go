@@ -12,6 +12,7 @@ import (
 var searchCmd = &cobra.Command{
 	Use:     "search [flags] search_term",
 	Aliases: []string{"s"},
+	Short:   "Search for logbook entries",
 
 	Run: func(cmd *cobra.Command, args []string) {
 		searchTerm := ""
@@ -24,8 +25,8 @@ var searchCmd = &cobra.Command{
 		t.SetHeaders("Date / Time", "Title", "Path")
 		for _, entry := range logEntries {
 			title := entry.Title
-			if len(title) > 45 {
-				title = title[:45]
+			if len(title) > 50 {
+				title = title[:50]
 				title += " (...)"
 			}
 			t.AddRow(strings.Replace(entry.DateTime, "T", " ", 1), title, entry.Directory)

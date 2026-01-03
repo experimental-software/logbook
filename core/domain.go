@@ -1,6 +1,6 @@
 package core
 
-type LogEntry struct {
+type LogbookEntry struct {
 	DateTime  string
 	Title     string
 	Directory string

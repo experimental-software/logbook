@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func AddLogEntry(baseDirectory, title string) (LogEntry, error) {
+func AddLogEntry(baseDirectory, title string) (LogbookEntry, error) {
 	currentTime := time.Now()
 	slug := slugify(title)
 	dateTime := fmt.Sprintf("%d-0%d-0%dT0%d:0%d",
@@ -28,16 +28,16 @@ func AddLogEntry(baseDirectory, title string) (LogEntry, error) {
 	)
 	err := os.MkdirAll(logDirectoryPath, 0777)
 	if err != nil {
-		return LogEntry{}, err
+		return LogbookEntry{}, err
 	}
 
 	logFilePath := filepath.Join(logDirectoryPath, slug+".md")
 	err = os.WriteFile(logFilePath, []byte(fmt.Sprintf("# %s\n\n", title)), 0777)
 	if err != nil {
-		return LogEntry{}, err
+		return LogbookEntry{}, err
 	}
 
-	return LogEntry{DateTime: dateTime, Title: title, Directory: logDirectoryPath}, nil
+	return LogbookEntry{DateTime: dateTime, Title: title, Directory: logDirectoryPath}, nil
 }
 
 func slugify(s string) string {

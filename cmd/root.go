@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/experimental-software/logbook2/config"
@@ -9,10 +8,11 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use: "logbook2",
+	Use:   "logbook2",
+	Short: "A markdown-based engineering logbook",
 
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("A markdown-based engineering logbook")
+		// noop
 	},
 }
 
@@ -20,6 +20,7 @@ func Execute() {
 	rootCmd.AddCommand(searchCmd)
 	rootCmd.AddCommand(addCmd)
 	rootCmd.AddCommand(archiveCmd)
+	rootCmd.AddCommand(removeCmd)
 
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 

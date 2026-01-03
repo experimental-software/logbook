@@ -1,0 +1,3 @@
+unleash:
+  output-statuses: "lc"
+  exclude-files: ["cmd/*"]

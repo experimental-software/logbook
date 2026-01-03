@@ -10,11 +10,10 @@ import (
 	"github.com/experimental-software/logbook2/logging"
 )
 
-var logFilePathPattern = regexp.MustCompile(`.*[/\\](\d{4})[/\\](\d{2})[/\\](\d{2})[/\\](\d{2})\.(\d{2})_.*`)
-var logfileParentDirectoryPattern = regexp.MustCompile(`^\d{2}\.\d{2}_.*`)
+var searchPathPattern = regexp.MustCompile(`.*[/\\](\d{4})[/\\](\d{2})[/\\](\d{2})[/\\](\d{2})\.(\d{2})_.*`)
 
-func Search(baseDirectory, searchTerm string) []LogEntry {
-	var result = make([]LogEntry, 0)
+func Search(baseDirectory, searchTerm string) []LogbookEntry {
+	var result = make([]LogbookEntry, 0)
 	err := filepath.Walk(baseDirectory,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
@@ -23,7 +22,7 @@ func Search(baseDirectory, searchTerm string) []LogEntry {
 			if !isLogEntryFile(path) {
 				return nil
 			}
-			pathDatetimeMatch := logFilePathPattern.FindStringSubmatch(path)
+			pathDatetimeMatch := searchPathPattern.FindStringSubmatch(path)
 			logDatetime := fmt.Sprintf("%s-%s-%sT%s:%s",
 				pathDatetimeMatch[1],
 				pathDatetimeMatch[2],
@@ -43,7 +42,7 @@ func Search(baseDirectory, searchTerm string) []LogEntry {
 			}
 
 			logDirectory, _ := filepath.Abs(filepath.Dir(path))
-			result = append(result, LogEntry{
+			result = append(result, LogbookEntry{
 				DateTime:  logDatetime,
 				Directory: logDirectory,
 				Title:     title,
@@ -64,7 +63,7 @@ func isLogEntryFile(path string) bool {
 		return false
 	}
 	parentDirectory := pathParts[len(pathParts)-2]
-	if !(logfileParentDirectoryPattern.MatchString(parentDirectory)) {
+	if !(regexp.MustCompile(`^\d{2}\.\d{2}_.*`).MatchString(parentDirectory)) {
 		return false
 	}
 	parentDirectorySlug := parentDirectory[6:]
@@ -72,7 +71,7 @@ func isLogEntryFile(path string) bool {
 	if parentDirectorySlug != fileSlug {
 		return false
 	}
-	pathDatetimeMatch := logFilePathPattern.FindStringSubmatch(path)
+	pathDatetimeMatch := searchPathPattern.FindStringSubmatch(path)
 	if len(pathDatetimeMatch) != 6 {
 		return false
 	}
