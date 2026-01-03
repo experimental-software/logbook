@@ -13,6 +13,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var SearchInArchiveParameter bool
 var FromParameter string
 var ToParameter string
 
@@ -32,24 +33,12 @@ var searchCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		searchTerm := ""
-		if len(args) > 0 {
-			searchTerm = args[0]
-		}
-
-		from, _ := time.Parse(utils.RFC3339date, FromParameter)
-		to, _ := time.Parse(utils.RFC3339date, ToParameter)
 
 		logEntries := core.Search(
-			configuration.LogDirectory, searchTerm, from, to,
+			baseDirectory(), searchTerm(args), from(), to(),
 		)
 
-		outputFormat, err := cmd.Flags().GetString("output-format")
-		if err != nil {
-			panic(err)
-		}
-
-		switch outputFormat {
+		switch outputFormat(cmd) {
 		default:
 			{
 				t := table.New(os.Stdout)
@@ -84,8 +73,42 @@ func init() {
 	flags := searchCmd.Flags()
 	flags.StringVarP(&FromParameter, "from", "f", "1970-01-01", "RFC 3339 formatted date for the earliest considered logbook entry.")
 	flags.StringVarP(&ToParameter, "to", "t", "2100-01-01", "RFC 3339 formatted date for the latest considered logbook entry.")
-
 	flags.VarP(StringChoice([]string{
 		"table", "list", "json",
 	}), "output-format", "o", "The format in which the log entries are printed to the terminal.\n[table (default), list, json]")
+	flags.BoolVarP(&SearchInArchiveParameter, "archive", "a", false, "Search in archived logbook entries.")
+}
+
+func baseDirectory() string {
+	if SearchInArchiveParameter {
+		return configuration.ArchiveDirectory
+	} else {
+		return configuration.LogDirectory
+	}
+}
+
+func searchTerm(args []string) string {
+	if len(args) > 0 {
+		return args[0]
+	} else {
+		return ""
+	}
+}
+
+func from() time.Time {
+	result, _ := time.Parse(utils.RFC3339date, FromParameter)
+	return result
+}
+
+func to() time.Time {
+	result, _ := time.Parse(utils.RFC3339date, ToParameter)
+	return result
+}
+
+func outputFormat(cmd *cobra.Command) string {
+	outputFormat, err := cmd.Flags().GetString("output-format")
+	if err != nil {
+		panic(err)
+	}
+	return outputFormat
 }
