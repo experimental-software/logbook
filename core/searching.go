@@ -6,13 +6,14 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+	"time"
 
 	"github.com/experimental-software/logbook2/logging"
 )
 
 var searchPathPattern = regexp.MustCompile(`.*[/\\](\d{4})[/\\](\d{2})[/\\](\d{2})[/\\](\d{2})\.(\d{2})_.*`)
 
-func Search(baseDirectory, searchTerm string) []LogbookEntry {
+func Search(baseDirectory, searchTerm string, from time.Time, to time.Time) []LogbookEntry {
 	var result = make([]LogbookEntry, 0)
 	err := filepath.Walk(baseDirectory,
 		func(path string, info os.FileInfo, err error) error {
@@ -30,6 +31,9 @@ func Search(baseDirectory, searchTerm string) []LogbookEntry {
 				pathDatetimeMatch[4],
 				pathDatetimeMatch[5],
 			)
+			if !isInRequestedTimeRange(logDatetime, from, to) {
+				return nil
+			}
 
 			logFileBytes, err := os.ReadFile(path)
 			if err != nil {
@@ -54,6 +58,10 @@ func Search(baseDirectory, searchTerm string) []LogbookEntry {
 		logging.Error("Could not traverse log directory.", err)
 	}
 	return result
+}
+
+func isInRequestedTimeRange(datetime string, from time.Time, to time.Time) bool {
+	return datetime >= from.Format(time.RFC3339) && datetime <= to.Format(time.RFC3339)
 }
 
 func isLogEntryFile(path string) bool {

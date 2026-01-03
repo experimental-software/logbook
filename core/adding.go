@@ -9,22 +9,24 @@ import (
 	"time"
 )
 
-func AddLogEntry(baseDirectory, title string) (LogbookEntry, error) {
-	currentTime := time.Now()
+var epoc, _ = time.Parse("2006-01-02", "1970-01-01")
+var nextCentury, _ = time.Parse("2006-01-02", "2100-01-01")
+
+func AddLogEntry(baseDirectory, title string, dateTime time.Time) (LogbookEntry, error) {
 	slug := slugify(title)
-	dateTime := fmt.Sprintf("%d-0%d-0%dT0%d:0%d",
-		currentTime.Year(),
-		currentTime.Month(),
-		currentTime.Day(),
-		currentTime.Hour(),
-		currentTime.Minute(),
+	formattedDateTime := fmt.Sprintf("%d-0%d-0%dT0%d:0%d",
+		dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
 	)
 
 	logDirectoryPath := filepath.Join(baseDirectory,
-		fmt.Sprintf("%d", currentTime.Year()),
-		fmt.Sprintf("%02d", currentTime.Month()),
-		fmt.Sprintf("%02d", currentTime.Day()),
-		fmt.Sprintf("%02d.%02d_%s", currentTime.Hour(), currentTime.Minute(), slug),
+		fmt.Sprintf("%d", dateTime.Year()),
+		fmt.Sprintf("%02d", dateTime.Month()),
+		fmt.Sprintf("%02d", dateTime.Day()),
+		fmt.Sprintf("%02d.%02d_%s", dateTime.Hour(), dateTime.Minute(), slug),
 	)
 	err := os.MkdirAll(logDirectoryPath, 0777)
 	if err != nil {
@@ -37,7 +39,7 @@ func AddLogEntry(baseDirectory, title string) (LogbookEntry, error) {
 		return LogbookEntry{}, err
 	}
 
-	return LogbookEntry{DateTime: dateTime, Title: title, Directory: logDirectoryPath}, nil
+	return LogbookEntry{DateTime: formattedDateTime, Title: title, Directory: logDirectoryPath}, nil
 }
 
 func slugify(s string) string {

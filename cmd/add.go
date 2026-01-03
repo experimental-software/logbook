@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/experimental-software/logbook2/core"
 	"github.com/experimental-software/logbook2/logging"
@@ -16,7 +17,7 @@ var addCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		title := args[0]
-		result, err := core.AddLogEntry(configuration.LogDirectory, title)
+		result, err := core.AddLogEntry(configuration.LogDirectory, title, time.Now())
 		if err != nil {
 			logging.Error("Failed to create log entry", err)
 			os.Exit(1)

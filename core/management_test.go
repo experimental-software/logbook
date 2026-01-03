@@ -5,6 +5,7 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/experimental-software/logbook2/config"
 )
@@ -18,11 +19,11 @@ func Test_Delete_happy_path(t *testing.T) {
 		_ = os.RemoveAll(archiveBaseDir)
 	}(logBaseDir)
 
-	logEntry, err := AddLogEntry(logBaseDir, "Log entry for archive test")
+	logEntry, err := AddLogEntry(logBaseDir, "Log entry for archive test", time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}
-	searchResultForArchiveBaseDir := Search(logBaseDir, "")
+	searchResultForArchiveBaseDir := Search(logBaseDir, "", epoc, nextCentury)
 	if len(searchResultForArchiveBaseDir) != 1 {
 		t.Fatal("Expected 1 search result")
 	}
@@ -34,7 +35,7 @@ func Test_Delete_happy_path(t *testing.T) {
 	}
 
 	// Assert
-	searchResultForLogBaseDir := Search(logBaseDir, "")
+	searchResultForLogBaseDir := Search(logBaseDir, "", epoc, nextCentury)
 	if len(searchResultForLogBaseDir) != 0 {
 		t.Fatal("Expected empty search result")
 	}
@@ -49,7 +50,7 @@ func Test_Archive_happy_path(t *testing.T) {
 		_ = os.RemoveAll(archiveBaseDir)
 	}(logBaseDir)
 
-	logEntry, err := AddLogEntry(logBaseDir, "Log entry for archive test")
+	logEntry, err := AddLogEntry(logBaseDir, "Log entry for archive test", time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -66,11 +67,11 @@ func Test_Archive_happy_path(t *testing.T) {
 	}
 
 	// Assert
-	searchResultForLogBaseDir := Search(logBaseDir, "")
+	searchResultForLogBaseDir := Search(logBaseDir, "", epoc, nextCentury)
 	if len(searchResultForLogBaseDir) != 0 {
 		t.Fatal("Expected empty search result")
 	}
-	searchResultForArchiveBaseDir := Search(archiveBaseDir, "")
+	searchResultForArchiveBaseDir := Search(archiveBaseDir, "", epoc, nextCentury)
 	if len(searchResultForArchiveBaseDir) != 1 {
 		t.Fatal("Expected 1 search result")
 	}
@@ -85,7 +86,7 @@ func Test_Archive_path_in_subdirectory(t *testing.T) {
 		_ = os.RemoveAll(archiveBaseDir)
 	}(logBaseDir)
 
-	logEntry, err := AddLogEntry(logBaseDir, "Log entry for archive test")
+	logEntry, err := AddLogEntry(logBaseDir, "Log entry for archive test", time.Now())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,11 +104,11 @@ func Test_Archive_path_in_subdirectory(t *testing.T) {
 	}
 
 	// Assert
-	searchResultForLogBaseDir := Search(logBaseDir, "")
+	searchResultForLogBaseDir := Search(logBaseDir, "", epoc, nextCentury)
 	if len(searchResultForLogBaseDir) != 0 {
 		t.Fatal("Expected empty search result")
 	}
-	searchResultForArchiveBaseDir := Search(archiveBaseDir, "")
+	searchResultForArchiveBaseDir := Search(archiveBaseDir, "", epoc, nextCentury)
 	if len(searchResultForArchiveBaseDir) != 1 {
 		t.Fatal("Expected 1 search result")
 	}
