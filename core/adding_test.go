@@ -3,6 +3,7 @@ package core
 import (
 	"os"
 	"testing"
+	"time"
 )
 
 func TestAddLogEntry(t *testing.T) {
@@ -15,7 +16,7 @@ func TestAddLogEntry(t *testing.T) {
 	defer os.RemoveAll(tempDir)
 
 	// Act
-	entry, err := AddLogEntry(tempDir, "This is a new log entry")
+	entry, err := AddLogEntry(tempDir, "This is a new log entry", time.Now())
 
 	// Assert
 	if err != nil {
@@ -24,7 +25,7 @@ func TestAddLogEntry(t *testing.T) {
 	if entry.Title != "This is a new log entry" {
 		t.Errorf("AddLogEntry returned wrong title")
 	}
-	allLogEntries := Search(tempDir, "")
+	allLogEntries := Search(tempDir, "", epoc, nextCentury)
 	if len(allLogEntries) != 1 {
 		t.Errorf("AddLogEntry returned wrong number of entries")
 	}
