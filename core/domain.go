@@ -1,7 +1,7 @@
 package core
 
 type LogbookEntry struct {
-	DateTime  string
-	Title     string
-	Directory string
+	DateTime  string `json:"dateTime"`
+	Title     string `json:"title"`
+	Directory string `json:"directory"`
 }

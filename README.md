@@ -23,19 +23,49 @@ In the `~/.config/logbook/config.yaml` file it can be configured what directorie
 The following snippet shows the configuration options with their default values:
 
 ```yaml
-# The directory where new log entries are added.
+# The directory where new logbook entries are added.
 logDirectory: ~/Logs
 
-# The directory where log entries are moved when they are archived.
+# The directory where logbook entries are moved when they are archived.
 archiveDirectory: ~/Archive
 ```
 
 ## Usage
 
-### Search log entries
+### Add logbook entry
 
 ```sh
-logbook2 search $SEARCH_TERM
+# Add logbook entry
+logbook2 add "${TITLE}"
+
+# Add logbook entry and open its root directory in a text editor
+${EDITOR} $(logbook2 add "${TITLE}")
+```
+
+### Search logbook entries
+
+```sh
+logbook2 search "${SEARCH_TERM}"
+```
+
+### Archive logbook entries
+
+```sh
+# Archive single logbook entry
+logbook2 archive "${PATH}"
+
+# Archive multiple logbook entries
+logbook2 archive $(logbook2 search --output-format list "${SEARCH_TERM}")
+```
+
+### Remove logbook entries
+
+```sh
+# Remove single logbook entry
+logbook2 remove "${PATH}"
+
+# Remove multiple logbook entries
+logbook2 remove $(logbook2 search --output-format list "${SEARCH_TERM}")
 ```
 
 ## Testing
