@@ -98,7 +98,6 @@ https://sonarcloud.io/summary/overall?id=experimental-software_logbook&branch=ma
 
 ## Alternative projects
 
-- [logbook-dart](https://github.com/experimental-software/logbook-dart)
 - [Paper-based engineering notebook](https://www.youtube.com/watch?v=xaFqpd7lNM4)
 - [QOwnNote](https://www.qownnotes.org)
 - [Emacs OrgMode](https://orgmode.org)
