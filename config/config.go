@@ -17,29 +17,27 @@ type Configuration struct {
 }
 
 var defaultConfiguration = Configuration{
-	LogDirectory: filepath.Join(userHomeDir(), "Logs"),
+	LogDirectory:     filepath.Join(userHomeDir(), "Logs"),
+	ArchiveDirectory: filepath.Join(userHomeDir(), "Archive"),
 }
 
 func LoadConfiguration(configurationFilePath string) Configuration {
-	var result Configuration
+	result := defaultConfiguration
 
 	configurationBytes, err := os.ReadFile(configurationFilePath)
 	if err != nil {
 		logging.Warn("Failed to read Configuration file: " + configurationFilePath)
-		result = defaultConfiguration
+		return result
 	}
 
 	err = yaml.Unmarshal(configurationBytes, &result)
 	if err != nil {
 		logging.Warn("Failed to unmarshal Configuration file: " + configurationFilePath)
-		result = defaultConfiguration
+		return result
 	}
 
-	result.LogDirectory = strings.Replace(result.LogDirectory, "~", userHomeDir(), -1)
-	result.LogDirectory = strings.TrimSpace(result.LogDirectory)
-
-	result.ArchiveDirectory = strings.Replace(result.ArchiveDirectory, "~", userHomeDir(), -1)
-	result.ArchiveDirectory = strings.TrimSpace(result.ArchiveDirectory)
+	result.LogDirectory = strings.ReplaceAll(result.LogDirectory, "~", userHomeDir())
+	result.ArchiveDirectory = strings.ReplaceAll(result.ArchiveDirectory, "~", userHomeDir())
 
 	return result
 }

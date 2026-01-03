@@ -25,6 +25,9 @@ The following snippet shows the configuration options with their default values:
 ```yaml
 # The directory where new log entries are added.
 logDirectory: ~/Logs
+
+# The directory where log entries are moved when they are archived.
+archiveDirectory: ~/Archive
 ```
 
 ## Usage
@@ -41,6 +44,12 @@ logbook2 search $SEARCH_TERM
 
 ```sh
 go test ./... -coverprofile=./cov.out
+```
+
+With the help of the [gremlins](https://gremlins.dev/) program, the tests can be executed with mutations:
+
+```sh
+gremlins unleash
 ```
 
 ### Component integration test
