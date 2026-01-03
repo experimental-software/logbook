@@ -10,7 +10,8 @@ import (
 )
 
 var searchCmd = &cobra.Command{
-	Use: "search [flags] search_term",
+	Use:     "search [flags] search_term",
+	Aliases: []string{"s"},
 
 	Run: func(cmd *cobra.Command, args []string) {
 		searchTerm := ""
