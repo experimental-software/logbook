@@ -19,7 +19,7 @@ var removeCmd = &cobra.Command{
 		for _, path := range args {
 			err := core.Remove(path)
 			if err != nil {
-				logging.Error("Removing logbook entry filed failed for path: "+path, err)
+				logging.Error("Removing logbook entry failed for path: "+path, err)
 				os.Exit(1)
 			}
 			fmt.Println(path)
