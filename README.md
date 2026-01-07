@@ -98,7 +98,7 @@ https://sonarcloud.io/summary/overall?id=experimental-software_logbook&branch=ma
 
 ## Alternative projects
 
-- [Paper-based engineering notebook](https://www.youtube.com/watch?v=xaFqpd7lNM4)
+- [Paper-based engineering logbook](https://github.com/experimental-software/logbook/wiki/Paper%E2%80%90based-engineering-logbook)
 - [QOwnNote](https://www.qownnotes.org)
 - [Emacs OrgMode](https://orgmode.org)
 - [Evernote](https://evernote.com)
