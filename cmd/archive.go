@@ -17,6 +17,9 @@ var archiveCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 		for _, path := range args {
+			if _, err := os.Stat(path); os.IsNotExist(err) {
+				continue
+			}
 			err := core.Archive(configuration, path)
 			if err != nil {
 				logging.Error("Archive failed", err)
