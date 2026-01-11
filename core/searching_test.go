@@ -8,19 +8,37 @@ import (
 	"github.com/experimental-software/logbook2/utils"
 )
 
-func Test_Search_without_search_term(t *testing.T) {
-	result := Search("./t/2026/01", "", epoc, nextCentury)
-	if len(result) != 2 {
-		t.Errorf("Expected two search results but found %v", len(result))
+func Test_Search(t *testing.T) {
+	testCases := []struct {
+		name                    string
+		searchTerm              string
+		expectedNumberOfMatches int
+	}{
+		{
+			name:                    "No search term",
+			searchTerm:              "",
+			expectedNumberOfMatches: 3,
+		},
+		{
+			name:                    "Legacy log entry file name pattern",
+			searchTerm:              "ANOTHER",
+			expectedNumberOfMatches: 1,
+		},
+		{
+			name:                    "Updated log entry file name pattern",
+			searchTerm:              "New test",
+			expectedNumberOfMatches: 1,
+		},
 	}
-}
 
-func Test_Search_with_search_term(t *testing.T) {
-	result := Search("./t/2026/01", "ANOTHER", epoc, nextCentury)
-	if len(result) != 1 {
-		t.Errorf("Expected only one search result but found %v", len(result))
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := Search("./t/2026/01", tc.searchTerm, epoc, nextCentury)
+			if len(result) != tc.expectedNumberOfMatches {
+				t.Errorf("expectedNumberOfMatches: %v, got: %v", tc.expectedNumberOfMatches, len(result))
+			}
+		})
 	}
-	fmt.Println(result)
 }
 
 func Test_Search_ignore_unexpected_data(t *testing.T) {
@@ -69,7 +87,7 @@ func Test_isInRequestedTimeRange(t *testing.T) {
 			to, _ := time.Parse(utils.RFC3339date, tc.to)
 			result := isInRequestedTimeRange(tc.dateTime, from, to)
 			if result != tc.expected {
-				t.Errorf("expected: %v, got: %v", tc.expected, result)
+				t.Errorf("expectedNumberOfMatches: %v, got: %v", tc.expected, result)
 			}
 		})
 	}

@@ -11,7 +11,11 @@ import (
 	"github.com/experimental-software/logbook2/logging"
 )
 
+// e.g. /path/to/2026/01/11/18.03_wip
 var searchPathPattern = regexp.MustCompile(`.*[/\\](\d{4})[/\\](\d{2})[/\\](\d{2})[/\\](\d{2})\.(\d{2})_.*`)
+
+// e.g. 20250111T1810
+var isoDateTimeBasicFormat = regexp.MustCompile(`^\d{4}\d{2}\d{2}T\d{2}\d{2}$`)
 
 func Search(baseDirectory, searchTerm string, from time.Time, to time.Time) []LogbookEntry {
 	var result = make([]LogbookEntry, 0)
@@ -35,11 +39,11 @@ func Search(baseDirectory, searchTerm string, from time.Time, to time.Time) []Lo
 				return nil
 			}
 
-			logFileBytes, err := os.ReadFile(path)
+			logEntryFileBytes, err := os.ReadFile(path)
 			if err != nil {
 				return err
 			}
-			logFile := string(logFileBytes)
+			logFile := string(logEntryFileBytes)
 			title := strings.Replace(strings.Split(logFile, "\n")[0], "# ", "", 1)
 			if searchTerm != "" && !strings.Contains(strings.ToLower(title), strings.ToLower(searchTerm)) {
 				return nil
@@ -75,13 +79,14 @@ func isLogEntryFile(path string) bool {
 		return false
 	}
 	parentDirectorySlug := parentDirectory[6:]
-	fileSlug := strings.Replace(lastPathPart, ".md", "", -1)
-	if parentDirectorySlug != fileSlug {
+	simpleFileName := strings.Replace(lastPathPart, ".md", "", -1)
+	if len(isoDateTimeBasicFormat.FindStringSubmatch(simpleFileName)) != 1 && parentDirectorySlug != simpleFileName {
 		return false
 	}
 	pathDatetimeMatch := searchPathPattern.FindStringSubmatch(path)
-	if len(pathDatetimeMatch) != 6 {
-		return false
+	if len(pathDatetimeMatch) == 6 {
+		return true
 	}
-	return true
+
+	return false
 }
