@@ -33,8 +33,15 @@ func AddLogEntry(baseDirectory, title string, dateTime time.Time) (LogbookEntry,
 		return LogbookEntry{}, err
 	}
 
-	logFilePath := filepath.Join(logDirectoryPath, slug+".md")
-	err = os.WriteFile(logFilePath, []byte(fmt.Sprintf("# %s\n\n", title)), 0777)
+	dateTimeIso8601BasicFormat := fmt.Sprintf("%d%02d%02dT%02d%02d",
+		dateTime.Year(),
+		dateTime.Month(),
+		dateTime.Day(),
+		dateTime.Hour(),
+		dateTime.Minute(),
+	)
+	logEntryFilePath := filepath.Join(logDirectoryPath, dateTimeIso8601BasicFormat+".md")
+	err = os.WriteFile(logEntryFilePath, []byte(fmt.Sprintf("# %s\n\n", title)), 0777)
 	if err != nil {
 		return LogbookEntry{}, err
 	}
