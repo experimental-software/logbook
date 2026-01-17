@@ -89,6 +89,7 @@ go run main.go
 go run main.go search
 go run main.go add "Just a test"
 go run main.go archive /path/to/2026/01/11/17.28_wip
+go run main.go search -a 
 ```
 
 ## Maintenance

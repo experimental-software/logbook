@@ -2,6 +2,7 @@ package core
 
 import (
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -19,10 +20,16 @@ var isoDateTimeBasicFormat = regexp.MustCompile(`^\d{4}\d{2}\d{2}T\d{2}\d{2}$`)
 
 func Search(baseDirectory, searchTerm string, from time.Time, to time.Time) []LogbookEntry {
 	var result = make([]LogbookEntry, 0)
-	err := filepath.Walk(baseDirectory,
-		func(path string, info os.FileInfo, err error) error {
+
+	maxDepth := strings.Count(baseDirectory, string(os.PathSeparator)) + 4
+
+	err := filepath.WalkDir(baseDirectory,
+		func(path string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return err
+			}
+			if d.IsDir() && strings.Count(path, string(os.PathSeparator)) > maxDepth {
+				return fs.SkipDir
 			}
 			if !isLogEntryFile(path) {
 				return nil
@@ -69,11 +76,12 @@ func isInRequestedTimeRange(datetime string, from time.Time, to time.Time) bool 
 }
 
 func isLogEntryFile(path string) bool {
-	pathParts := strings.Split(path, string(os.PathSeparator))
-	lastPathPart := pathParts[len(pathParts)-1]
-	if !strings.HasSuffix(lastPathPart, ".md") {
+	if !strings.HasSuffix(path, ".md") {
 		return false
 	}
+
+	pathParts := strings.Split(path, string(os.PathSeparator))
+	lastPathPart := pathParts[len(pathParts)-1]
 	parentDirectory := pathParts[len(pathParts)-2]
 	if !(regexp.MustCompile(`^\d{2}\.\d{2}_.*`).MatchString(parentDirectory)) {
 		return false
