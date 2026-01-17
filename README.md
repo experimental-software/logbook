@@ -110,3 +110,5 @@ https://sonarcloud.io/summary/overall?id=experimental-software_logbook&branch=ma
 - [Obsidian](https://obsidian.md/)
 - [Joplin](https://joplinapp.org/)
 - [Zettelkasten](https://zettelkasten.de/)
+- [Dendron](https://wiki.dendron.so/)
+
