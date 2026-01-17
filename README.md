@@ -68,6 +68,22 @@ logbook2 remove "${PATH}"
 logbook2 remove $(logbook2 search --output-format list "${SEARCH_TERM}")
 ```
 
+### Extensions
+
+User-specific utitlity may be defined as shell functions, e.g. this Bash function on a macOS computer that has VS Code installed:
+
+```sh
+function note() {
+  local LOGBOOK_ENTRY_TITLE=$1
+  if [[ -z "$LOGBOOK_ENTRY_TITLE" ]]; then
+    LOGBOOK_ENTRY_TITLE="Scratch Note"
+  fi
+  code $(logbook2 add "$LOGBOOK_ENTRY_TITLE")
+}
+```
+
+-- `~/.bash_profile`
+
 ## Testing
 
 ### Component test
