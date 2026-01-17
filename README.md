@@ -4,8 +4,8 @@ The Logbook project provides a command-line application for Markdown-based chron
 
 ## Setup
 
-Provided that a computer has the SDK for the [go](https://go.dev) programming language installed, the _Logbook_ can be
-installed by cloning its git repository and then running the `go install` command.
+If a computer has the [go command](https://go.dev/dl/) and [Git](https://git-scm.com) installed, the _Logbook_ can be
+installed by cloning its Git repository and then running the `go install` command.
 
 ```sh
 git clone git@github.com:experimental-software/logbook.git && cd ./logbook
