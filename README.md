@@ -68,11 +68,13 @@ logbook2 remove "${PATH}"
 logbook2 remove $(logbook2 search --output-format list "${SEARCH_TERM}")
 ```
 
-### Extensions
+### Customization
 
-User-specific utitlity may be defined as shell functions, e.g. this Bash function on a macOS computer that has VS Code installed:
+User-specific utilities may be defined with shell features, e.g. this Bash alias and function on a macOS computer that has VS Code installed:
 
 ```sh
+alias log=logbook2
+
 function note() {
   local LOGBOOK_ENTRY_TITLE=$1
   if [[ -z "$LOGBOOK_ENTRY_TITLE" ]]; then
@@ -82,7 +84,7 @@ function note() {
 }
 ```
 
--- `~/.bash_profile`
+– `~/.bash_profile`
 
 ## Testing
 
