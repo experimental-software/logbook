@@ -70,17 +70,33 @@ logbook2 remove $(logbook2 search --output-format list "${SEARCH_TERM}")
 
 ### Customization
 
-User-specific utilities may be defined with shell features, e.g. this Bash alias and function on a macOS computer that has VS Code installed:
+User-specific utilities may be defined with shell features, e.g. this Bash alias and functions on a macOS computer that has VS Code installed:
 
 ```sh
 alias log=logbook2
 
+# Creates logbook entry with title "Scratch Note" and opens it in VS Code.
 function note() {
   local LOGBOOK_ENTRY_TITLE=$1
   if [[ -z "$LOGBOOK_ENTRY_TITLE" ]]; then
     LOGBOOK_ENTRY_TITLE="Scratch Note"
   fi
-  code $(logbook2 add "$LOGBOOK_ENTRY_TITLE")
+  LOGBOOK_ENTRY=$(log add "$LOGBOOK_ENTRY_TITLE")
+  code "$LOGBOOK_ENTRY"
+  code "$LOGBOOK_ENTRY"/*.md
+}
+
+# Searches for logbook entries. If one result, open logbook entry in VS Code.
+# Otherwise, print search results.
+function notes() {
+  local SEARCH_TERM="$1"
+  local ENTRY_LIST=$(log search "$SEARCH_TERM" --output-format list)
+  local NUMBER_OF_ENTRIES=$(echo "$ENTRY_LIST" | wc | perl -pe 's/.*?(\d+).*/$1/')
+  if [[ $NUMBER_OF_ENTRIES -eq 1 ]]; then
+    code $ENTRY_LIST
+  else
+    log search "$SEARCH_TERM"
+  fi
 }
 ```
 
