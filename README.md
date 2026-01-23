@@ -89,7 +89,7 @@ function note() {
 # Searches for logbook entries. If one result, open logbook entry in VS Code.
 # Otherwise, print search results.
 function notes() {
-  local SEARCH_TERM="$1"
+  local SEARCH_TERM="$@"
   local ENTRY_LIST=$(log search "$SEARCH_TERM" --output-format list)
   local NUMBER_OF_ENTRIES=$(echo "$ENTRY_LIST" | wc | perl -pe 's/.*?(\d+).*/$1/')
   if [[ $NUMBER_OF_ENTRIES -eq 1 ]]; then
