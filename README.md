@@ -77,7 +77,7 @@ alias log=logbook2
 
 # Creates logbook entry with title "Scratch Note" and opens it in VS Code.
 function note() {
-  local LOGBOOK_ENTRY_TITLE=$1
+  local LOGBOOK_ENTRY_TITLE="$@"
   if [[ -z "$LOGBOOK_ENTRY_TITLE" ]]; then
     LOGBOOK_ENTRY_TITLE="Scratch Note"
   fi
@@ -86,17 +86,15 @@ function note() {
   code "$LOGBOOK_ENTRY"/*.md
 }
 
-# Searches for logbook entries. If one result, open logbook entry in VS Code.
-# Otherwise, print search results.
-function notes() {
-  local SEARCH_TERM="$@"
-  local ENTRY_LIST=$(log search "$SEARCH_TERM" --output-format list)
-  local NUMBER_OF_ENTRIES=$(echo "$ENTRY_LIST" | wc | perl -pe 's/.*?(\d+).*/$1/')
-  if [[ $NUMBER_OF_ENTRIES -eq 1 ]]; then
-    code $ENTRY_LIST
-  else
-    log search "$SEARCH_TERM"
-  fi
+# Create logbook entry with architecture decision record
+function adr() {
+  local SCOPE="$@"
+  local LOGBOOK_ENTRY_DIR=$(log add "ADR: $SCOPE")
+  cp ~/Vorlagen/adr.md $LOGBOOK_ENTRY_DIR/
+  perl -pi -e "s/SCOPE/${SCOPE}/g" $LOGBOOK_ENTRY_DIR/adr.md
+  local TODAY=$(date '+%Y-%m-%d')
+  perl -pi -e "s/DATE/${TODAY}/g" $LOGBOOK_ENTRY_DIR/adr.md
+  code $LOGBOOK_ENTRY_DIR
 }
 ```
 
